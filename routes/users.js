@@ -1,4 +1,4 @@
-var conn = require("./../inc/db");
+var conn = require("../views/inc/db");
 var express = require('express');
 var router = express.Router();
 
