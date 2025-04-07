@@ -33,6 +33,7 @@ router.post("/contacts", function(req, res, next){
   } else {
     contacts.save(req.body).then(results => {
 
+      req.body = {};
       contacts.render(req, res, null, "Contato enviado com sucesso!"); 
 
     }).catch(err=>{
