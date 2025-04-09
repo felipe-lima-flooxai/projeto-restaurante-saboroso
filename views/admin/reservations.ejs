@@ -64,17 +64,19 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1.</td>
-                  <td>Hcode</td>
-                  <td>contato@hcode.com.br</td>
-                  <td>2</td>
-                  <td>1/1/2019</td>
-                  <td>10:30</td>
-                  <td><button type="button" class="btn btn-xs btn-info btn-update" data-toggle="modal" data-target="#modal-update"><i
+                <% data.forEach(row=> { %>
+                <tr data-row="<%= JSON.stringify(row) %>">
+                  <td><%= row.id %></td>
+                  <td><%= row.name %></td>
+                  <td><%= row.email %></td>
+                  <td><%= row.people %></td>
+                  <td><%= moment(row.date).format('DD [de] MMMM [de] YYYY') %></td>
+                  <td><%= row.time %></td>
+                  <td><button type="button" class="btn btn-xs btn-info btn-update" ><i
                         class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
                         class="fa fa-trash"></i> Excluir</button></td>
                 </tr>
+                <% }); %>
               </tbody>
             </table>
           </div>
@@ -99,7 +101,7 @@
     <div class="modal fade" id="modal-create">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00a65a;">
-          <form method="post">
+          <form method="post" action="/admin/reservations">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -149,7 +151,7 @@
     <div class="modal fade" id="modal-update">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00c0ef;">
-          <form method="post">
+          <form method="post" action="/admin/reservations">
             <input type="hidden" name="id">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -198,3 +200,34 @@
     </div>
 
 <%- include("inc/footer") -%>
+
+<script src="/js/moment.min.js"></script>
+<script src="/js/hcode-formsave.js"></script>
+<script src="/js/hcode-grid.js"></script>
+
+<script>
+
+new HcodeGrid({
+  
+  deleteUrl: "/admin/reservations/${data.id}",
+  deleteMsg: "Deseja realmente excluir a reserva de ${data.name}",
+  onUpdateLoad: (form, name, data) =>{
+
+  let input = form.querySelector(`[name=${name}]`);
+          
+    switch(name) {
+      case "date":
+      if(input) input.value = moment(data[name]).format('YYYY-MM-DD');
+        break;
+
+      default:
+        
+        if(input) input.value = data[name];
+        break;
+    }
+
+
+  }
+})
+
+</script>
