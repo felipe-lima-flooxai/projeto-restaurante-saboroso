@@ -149,8 +149,8 @@ router.delete("/menus/:id", function(req, res, next){
 //reserva
 router.get('/reservations', function(req, res, next) {
 
-    let start = (req.query.start) ? req.query.start : moment().subtract(1, "year").format("YYYY-MMM-DD");
-    let end = (req.query.end) ? req.query.end : moment().format("YYYY-MMM-DD");
+    let start = req.query.start ? moment(req.query.start, "YYYY-MMM-DD").format("YYYY-MM-DD") : moment().subtract(1, "year").format("YYYY-MM-DD");
+    let end = req.query.end ? moment(req.query.end, "YYYY-MMM-DD").format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
 
     reservations.getReservations(req).then(pag=>{
 
@@ -159,6 +159,19 @@ router.get('/reservations', function(req, res, next) {
     })
   
    
+});
+
+router.get("/reservations/chart", function(req, res, next){
+
+    let start = req.query.start ? moment(req.query.start, "YYYY-MMM-DD").format("YYYY-MM-DD") : moment().subtract(1, "year").format("YYYY-MM-DD");
+    let end = req.query.end ? moment(req.query.end, "YYYY-MMM-DD").format("YYYY-MM-DD") : moment().format("YYYY-MM-DD");
+
+    reservations.chart(req).then(chartData=>{
+        res.send(chartData);
+    }).catch(err=>{
+        res.send(err);
+    });
+
 });
 
 router.post("/reservations", function(req, res, next){
